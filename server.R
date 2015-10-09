@@ -35,12 +35,36 @@ shinyServer(function(input, output) {
           })
   })
   
+  output$info <- renderUI({
+    input$go
+    if(input$go==0)
+    {
+      return()
+    }
+    isolate({
+      data_f <- filteredData()
+    nam <- paste0(tags$strong("Name: "),unique(data_f$name),collapse = "")
+    addr <-paste0(tags$strong("Address: "),unique(data_f$full_address),collapse = "")
+    star <-paste0(tags$strong("Stars: "),unique(data_f$stars),collapse = "")
+    HTML(paste(nam,addr,star,sep = "<br>"))
+    
+    })
+    
+  })
+  
+  
   output$data_filter <- renderDataTable({
     if(input$go==0){
       return()
     }
     isolate({
-    filteredData()
+    data_filt <- filteredData()
+    data_filt<- data_filt %>% select(text,prob) %>% arrange(.,desc(prob)) %>% select(text)
+    #head tail loaded when no of text are very low ...same text is coming in both...better to have threshold !!  
+    top_pos <- head(data_filt ,5)
+    top_neg <- tail(data_filt,5)
+    dt <- data.table::data.table(Top_Positive= top_pos,Top_Negative = top_neg)
+    return(dt)
     })
   })
 })

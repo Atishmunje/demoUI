@@ -7,7 +7,7 @@ suppressMessages({library(shiny)
 shinyUI(fluidPage(title = "Search Engine",theme = shinytheme("united"),
                   sidebarLayout(
                     sidebarPanel( 
-                      selectInput("cityInput",choices = city,label = "choose city",multiple = T),
+                      selectInput("cityInput",choices = city,label = "choose city",multiple = F),
                       uiOutput("restaurant"),
                       br(),
                      tags$h4( tags$strong("Filters")),
@@ -19,8 +19,11 @@ shinyUI(fluidPage(title = "Search Engine",theme = shinytheme("united"),
                       
                     ),
                     mainPanel(
-                      leafletOutput("mymap"),
+                      leafletOutput("mymap",width = 600,height = 400),
+                      uiOutput("info",inline = T),
+                      br(),
                       dataTableOutput("data_filter")
+                    
                       
                     )
                   )
